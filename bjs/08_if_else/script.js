@@ -143,7 +143,8 @@ function findUpNum() {
     orderNumber++;
     orderNumberField.innerText = orderNumber;
     gameMainQuestion();
-    console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
+    numToText(answerNumber);
+    // console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
 }
 
 function findLowNum() {
@@ -152,17 +153,125 @@ function findLowNum() {
     orderNumber++;
     orderNumberField.innerText = orderNumber;
     gameMainQuestion();
-    console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
+    numToText(answerNumber);
+    // console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
 }
 
 document.getElementById('btnOver').addEventListener('click', function () {
-    if (gameRun) {(minValue == maxValue) ? gameWrongAnswers(): findUpNum();}
+    if (gameRun) {
+        (minValue == maxValue) ? gameWrongAnswers(): findUpNum();
+        numToText();
+    }
 })
 
 document.getElementById('btnLess').addEventListener('click', function () {
-    if (gameRun) {(minValue == maxValue) ? gameWrongAnswers(): findLowNum();}
+    if (gameRun) {
+        (minValue == maxValue) ? gameWrongAnswers(): findLowNum();
+    }
 })
 
 document.getElementById('btnEqual').addEventListener('click', function () {
-    if (gameRun) {gameRightAnswers();}
+    if (gameRun) {
+        gameRightAnswers();
+    }
 })
+
+let onesArr = ["", " один", " два", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять"];
+let tenTwoTenArr = ["", " десять", " одиннадцать", " двенадцать", " тринадцать", " четырнадцать", " пятнадцать", " шестнадцать", " семнадцать", " восемнадцать", " девятнадцать"];
+let tensArr = ["", " двадцать", " тридцать", " сорок", " пятьдесят", " шестьдесят", " семьдесят", " восемьдесят", " девяносто"];
+let hundredsArr = ["", " сто", " двести", " триста", " четыреста", " пятьсот", " шестьсот", " семьсот", " восемьсот", " девятьсот"];
+let absNum = Math.abs(answerNumber);
+let answerNumberText = "";
+
+function numToText(answerNumber) {
+    absNum = Math.abs(answerNumber);
+    answerNumberText = "";
+    let minusText = "минус";
+    let onesText = onesArr[absNum];
+    let nullNext = "ноль";
+    let tenTwoTenText = tenTwoTenArr[absNum - 10];
+    let tensText = tensArr[Math.floor(absNum / 10) - 1];
+    let hundredsText = hundredsArr[Math.floor(absNum / 100)];
+    let tail_10 = absNum - Math.floor(absNum / 10);
+    let tail_100 = absNum - Math.floor(absNum / 100);
+
+
+
+    if (answerNumber < 0) {
+        answerNumberText += minusText
+    }
+
+    if (absNum < 10 && absNum != 0) {
+        answerNumberText += onesText
+    }
+
+    if (absNum == 0) {
+        answerNumberText += nullNext
+    }
+
+    if (absNum >= 10 && absNum < 20) {
+        answerNumberText += tenTwoTenText
+    }
+
+    if (absNum >= 20 && absNum < 100) {
+        onesText = onesArr[tail_10];
+        answerNumberText += (tensText + onesText);
+    }
+
+    if (absNum >= 100 && absNum < 1000 && absNum % 100 == 0) {
+        answerNumberText += hundredsText;
+        if (tail_100 >= 10 && tail_100 < 20) {
+            tenTwoTenText = tenTwoTenArr[tail_100 - 9];
+            answerNumberText += (hundredsText + tenTwoTenText);
+        } else if (tail_100 >= 20) {
+            tensText = tensArr[Math.floor(tail_100 / 10) - 1];
+            onesText = onesArr[tail_100 % 10];
+            answerNumberText += (hundredsText + tensText + onesText);
+        } else if (tail_100 != 0) {
+            onesText = onesArr[tail_100];
+            answerNumberText += (hundredsText + onesText);
+        }
+    }
+    console.log(answerNumberText);
+    console.log(`${minusText}${hundredsText}${tensText}${tenTwoTenText}${onesText}`);
+}
+
+function isMinus() {
+    answerNumberText += "минус";
+    return answerNumberText;
+}
+
+function isOnes(absNum) {
+    answerNumberText += onesArr[absNum];
+    return answerNumberText;
+}
+
+function isNull() {
+    answerNumberText += "ноль";
+    return answerNumberText;
+}
+
+function isTenTwoTen(absNum) {
+    answerNumberText += tenTwoTenArr[absNum - 10];
+    return answerNumberText;
+}
+
+function isTens(absNum) {
+    answerNumberText += tensArr[Math.floor(absNum / 10) - 2];
+    let tail = absNum - Math.floor(absNum / 10);
+    isOnes(tail);
+    return answerNumberText;
+}
+
+function isHundreds(absNum) {
+    answerNumberText += hundredsArr[Math.floor(absNum / 100) - 1];
+    let tail = absNum - Math.floor(absNum / 100);
+    if (tail >= 10 && tail < 20) {
+        isTenTwoTen(tail);
+    } else if (tail >= 20) {
+        isTens(tail);
+    } else if (tail != 0) {
+        isOnes(tail);
+    }
+    return answerNumberText;
+}
