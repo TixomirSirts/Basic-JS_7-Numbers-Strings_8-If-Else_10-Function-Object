@@ -46,6 +46,7 @@ gameMinLimitField.innerText = gameMinLimit;
 gameMaxLimitField.innerText = gameMaxLimit;
 orderNumberField.innerText = orderNumber;
 answerField.innerText = `Вы загадали число ${answerNumber }?`;
+numToText(answerNumber);
 
 document.getElementById('btnRetry').addEventListener('click', function () {
     minValue = gameMinLimit;
@@ -75,6 +76,7 @@ function gameMainQuestion() {
             questionPhrase = `Is it number \n ${answerNumber} ???\n\u{1F97A}`;
     }
     answerField.innerText = questionPhrase;
+    numToText(answerNumber);
 }
 
 
@@ -158,120 +160,86 @@ function findLowNum() {
 }
 
 document.getElementById('btnOver').addEventListener('click', function () {
+    numToText(answerNumber);
     if (gameRun) {
-        (minValue == maxValue) ? gameWrongAnswers(): findUpNum();
-        numToText();
+        (minValue >= maxValue) ? gameWrongAnswers(): findUpNum();
     }
 })
 
 document.getElementById('btnLess').addEventListener('click', function () {
+    numToText(answerNumber);
     if (gameRun) {
-        (minValue == maxValue) ? gameWrongAnswers(): findLowNum();
+        (minValue >= maxValue) ? gameWrongAnswers(): findLowNum();
     }
 })
 
 document.getElementById('btnEqual').addEventListener('click', function () {
+    numToText(answerNumber);
     if (gameRun) {
         gameRightAnswers();
     }
 })
 
 let onesArr = ["", " один", " два", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять"];
-let tenTwoTenArr = ["", " десять", " одиннадцать", " двенадцать", " тринадцать", " четырнадцать", " пятнадцать", " шестнадцать", " семнадцать", " восемнадцать", " девятнадцать"];
-let tensArr = ["", " двадцать", " тридцать", " сорок", " пятьдесят", " шестьдесят", " семьдесят", " восемьдесят", " девяносто"];
-let hundredsArr = ["", " сто", " двести", " триста", " четыреста", " пятьсот", " шестьсот", " семьсот", " восемьсот", " девятьсот"];
-let absNum = Math.abs(answerNumber);
-let answerNumberText = "";
+let tenTwoTenArr = [" десять", " одиннадцать", " двенадцать", " тринадцать", " четырнадцать", " пятнадцать", " шестнадцать", " семнадцать", " восемнадцать", " девятнадцать"];
+let tensArr = [" двадцать", " тридцать", " сорок", " пятьдесят", " шестьдесят", " семьдесят", " восемьдесят", " девяносто"];
+let hundredsArr = [" сто", " двести", " триста", " четыреста", " пятьсот", " шестьсот", " семьсот", " восемьсот", " девятьсот"];
 
 function numToText(answerNumber) {
-    absNum = Math.abs(answerNumber);
-    answerNumberText = "";
-    let minusText = "минус";
-    let onesText = onesArr[absNum];
-    let nullNext = "ноль";
-    let tenTwoTenText = tenTwoTenArr[absNum - 10];
-    let tensText = tensArr[Math.floor(absNum / 10) - 1];
-    let hundredsText = hundredsArr[Math.floor(absNum / 100)];
-    let tail_10 = absNum - Math.floor(absNum / 10);
-    let tail_100 = absNum - Math.floor(absNum / 100);
-
-
-
-    if (answerNumber < 0) {
-        answerNumberText += minusText
-    }
-
-    if (absNum < 10 && absNum != 0) {
-        answerNumberText += onesText
-    }
-
-    if (absNum == 0) {
-        answerNumberText += nullNext
-    }
-
-    if (absNum >= 10 && absNum < 20) {
-        answerNumberText += tenTwoTenText
-    }
-
-    if (absNum >= 20 && absNum < 100) {
-        onesText = onesArr[tail_10];
-        answerNumberText += (tensText + onesText);
-    }
-
-    if (absNum >= 100 && absNum < 1000 && absNum % 100 == 0) {
-        answerNumberText += hundredsText;
-        if (tail_100 >= 10 && tail_100 < 20) {
-            tenTwoTenText = tenTwoTenArr[tail_100 - 9];
-            answerNumberText += (hundredsText + tenTwoTenText);
-        } else if (tail_100 >= 20) {
-            tensText = tensArr[Math.floor(tail_100 / 10) - 1];
-            onesText = onesArr[tail_100 % 10];
-            answerNumberText += (hundredsText + tensText + onesText);
-        } else if (tail_100 != 0) {
-            onesText = onesArr[tail_100];
-            answerNumberText += (hundredsText + onesText);
+    let keyNum = answerNumber;
+    let numText = "";
+    function swithToText(numText) {
+        if (numText.length <= 20) {
+            let oldText = answerField.innerText;
+            let newText = oldText.replace(`${answerNumber}`, `${numText}`);
+            answerField.innerText = newText;
+        }
+    };
+    if (keyNum === 0) {
+        numText = "ноль";
+        swithToText(numText);
+    } else {
+        if (keyNum < 0) {
+            numText = "минус";
+        }
+        keyNum = Math.abs(keyNum);
+        if (keyNum < 10) {
+            numText += onesArr[`${keyNum}`];
+            swithToText(numText);
+        } else if (keyNum < 20) {
+            numText += tenTwoTenArr[`${keyNum - 10}`];
+            swithToText(numText);
+        } else if (keyNum < 100) {
+            if ((keyNum % 10) === 0) {
+                numText += tensArr[`${keyNum / 10 - 2}`];
+                swithToText(numText);
+            } else {
+                numText += tensArr[`${Math.floor(keyNum / 10) - 2}`];
+                numText += onesArr[`${keyNum % 10}`];
+                swithToText(numText);
+            }
+        } else if (keyNum < 1000) {
+            if ((keyNum % 100) === 0) {
+                numText += hundredsArr[`${keyNum / 100 - 1}`];
+                swithToText(numText);
+            } else if ((keyNum % 10) === 0) {
+                numText += hundredsArr[`${Math.floor(keyNum / 100) - 1}`];
+                ((keyNum % 100) === 10) ?  numText += tenTwoTenArr[0] : numText += tensArr[`${(keyNum % 100) / 10 - 2}`];
+                swithToText(numText);
+            } else {
+                numText += hundredsArr[`${Math.floor(keyNum / 100) - 1}`];
+                if ((keyNum % 100) < 10) {
+                    numText += onesArr[`${keyNum % 100}`];
+                    swithToText(numText);
+                } else if ((keyNum % 100) < 20) {
+                    numText += tenTwoTenArr[`${(keyNum % 100) - 10}`];
+                    swithToText(numText);
+                } else {
+                    numText += tensArr[`${Math.floor(keyNum % 100 / 10) - 2}`];
+                    numText += onesArr[`${keyNum % 10}`];
+                    swithToText(numText);
+                }
+            }
         }
     }
-    console.log(answerNumberText);
-    console.log(`${minusText}${hundredsText}${tensText}${tenTwoTenText}${onesText}`);
-}
-
-function isMinus() {
-    answerNumberText += "минус";
-    return answerNumberText;
-}
-
-function isOnes(absNum) {
-    answerNumberText += onesArr[absNum];
-    return answerNumberText;
-}
-
-function isNull() {
-    answerNumberText += "ноль";
-    return answerNumberText;
-}
-
-function isTenTwoTen(absNum) {
-    answerNumberText += tenTwoTenArr[absNum - 10];
-    return answerNumberText;
-}
-
-function isTens(absNum) {
-    answerNumberText += tensArr[Math.floor(absNum / 10) - 2];
-    let tail = absNum - Math.floor(absNum / 10);
-    isOnes(tail);
-    return answerNumberText;
-}
-
-function isHundreds(absNum) {
-    answerNumberText += hundredsArr[Math.floor(absNum / 100) - 1];
-    let tail = absNum - Math.floor(absNum / 100);
-    if (tail >= 10 && tail < 20) {
-        isTenTwoTen(tail);
-    } else if (tail >= 20) {
-        isTens(tail);
-    } else if (tail != 0) {
-        isOnes(tail);
-    }
-    return answerNumberText;
 }
