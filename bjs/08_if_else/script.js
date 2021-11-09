@@ -46,6 +46,7 @@ gameMinLimitField.innerText = gameMinLimit;
 gameMaxLimitField.innerText = gameMaxLimit;
 orderNumberField.innerText = orderNumber;
 answerField.innerText = `Вы загадали число ${answerNumber }?`;
+numToText(answerNumber);
 
 document.getElementById('btnRetry').addEventListener('click', function () {
     minValue = gameMinLimit;
@@ -75,6 +76,7 @@ function gameMainQuestion() {
             questionPhrase = `Is it number \n ${answerNumber} ???\n\u{1F97A}`;
     }
     answerField.innerText = questionPhrase;
+    numToText(answerNumber);
 }
 
 
@@ -143,7 +145,8 @@ function findUpNum() {
     orderNumber++;
     orderNumberField.innerText = orderNumber;
     gameMainQuestion();
-    console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
+    numToText(answerNumber);
+    // console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
 }
 
 function findLowNum() {
@@ -152,17 +155,91 @@ function findLowNum() {
     orderNumber++;
     orderNumberField.innerText = orderNumber;
     gameMainQuestion();
-    console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
+    numToText(answerNumber);
+    // console.log(`${minValue} < ${answerNumber} < ${maxValue}`);
 }
 
 document.getElementById('btnOver').addEventListener('click', function () {
-    if (gameRun) {(minValue == maxValue) ? gameWrongAnswers(): findUpNum();}
+    numToText(answerNumber);
+    if (gameRun) {
+        (minValue >= maxValue) ? gameWrongAnswers(): findUpNum();
+    }
 })
 
 document.getElementById('btnLess').addEventListener('click', function () {
-    if (gameRun) {(minValue == maxValue) ? gameWrongAnswers(): findLowNum();}
+    numToText(answerNumber);
+    if (gameRun) {
+        (minValue >= maxValue) ? gameWrongAnswers(): findLowNum();
+    }
 })
 
 document.getElementById('btnEqual').addEventListener('click', function () {
-    if (gameRun) {gameRightAnswers();}
+    numToText(answerNumber);
+    if (gameRun) {
+        gameRightAnswers();
+    }
 })
+
+let onesArr = ["", " один", " два", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять"];
+let tenTwoTenArr = [" десять", " одиннадцать", " двенадцать", " тринадцать", " четырнадцать", " пятнадцать", " шестнадцать", " семнадцать", " восемнадцать", " девятнадцать"];
+let tensArr = [" двадцать", " тридцать", " сорок", " пятьдесят", " шестьдесят", " семьдесят", " восемьдесят", " девяносто"];
+let hundredsArr = [" сто", " двести", " триста", " четыреста", " пятьсот", " шестьсот", " семьсот", " восемьсот", " девятьсот"];
+
+function numToText(answerNumber) {
+    let keyNum = answerNumber;
+    let numText = "";
+    function swithToText(numText) {
+        if (numText.length <= 20) {
+            let oldText = answerField.innerText;
+            let newText = oldText.replace(`${answerNumber}`, `${numText}`);
+            answerField.innerText = newText;
+        }
+    };
+    if (keyNum === 0) {
+        numText = "ноль";
+        swithToText(numText);
+    } else {
+        if (keyNum < 0) {
+            numText = "минус";
+        }
+        keyNum = Math.abs(keyNum);
+        if (keyNum < 10) {
+            numText += onesArr[`${keyNum}`];
+            swithToText(numText);
+        } else if (keyNum < 20) {
+            numText += tenTwoTenArr[`${keyNum - 10}`];
+            swithToText(numText);
+        } else if (keyNum < 100) {
+            if ((keyNum % 10) === 0) {
+                numText += tensArr[`${keyNum / 10 - 2}`];
+                swithToText(numText);
+            } else {
+                numText += tensArr[`${Math.floor(keyNum / 10) - 2}`];
+                numText += onesArr[`${keyNum % 10}`];
+                swithToText(numText);
+            }
+        } else if (keyNum < 1000) {
+            if ((keyNum % 100) === 0) {
+                numText += hundredsArr[`${keyNum / 100 - 1}`];
+                swithToText(numText);
+            } else if ((keyNum % 10) === 0) {
+                numText += hundredsArr[`${Math.floor(keyNum / 100) - 1}`];
+                ((keyNum % 100) === 10) ?  numText += tenTwoTenArr[0] : numText += tensArr[`${(keyNum % 100) / 10 - 2}`];
+                swithToText(numText);
+            } else {
+                numText += hundredsArr[`${Math.floor(keyNum / 100) - 1}`];
+                if ((keyNum % 100) < 10) {
+                    numText += onesArr[`${keyNum % 100}`];
+                    swithToText(numText);
+                } else if ((keyNum % 100) < 20) {
+                    numText += tenTwoTenArr[`${(keyNum % 100) - 10}`];
+                    swithToText(numText);
+                } else {
+                    numText += tensArr[`${Math.floor(keyNum % 100 / 10) - 2}`];
+                    numText += onesArr[`${keyNum % 10}`];
+                    swithToText(numText);
+                }
+            }
+        }
+    }
+}
