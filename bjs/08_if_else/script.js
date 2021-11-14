@@ -265,7 +265,7 @@ function gameWrongAnswers() {
             answerPhrase = `Вы загадали неправильное число!\n\u{1F914}`;
             break;
         case 3:
-            answerPhrase = `Вы точно загадили число между \n ${gameMinLimit} и ${gameMaxLimit}?\n\u{1F928}`;
+            answerPhrase = `Вы точно загадали число между \n ${gameMinLimit} и ${gameMaxLimit}?\n\u{1F928}`;
             break;
         default:
             answerPhrase = `Again???\n\u{1F97A}`;
