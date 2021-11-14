@@ -152,6 +152,7 @@ function checkError() {
         newLimits.classList.add('covert');
         btnLaunch.innerText = `let\'s go!`;
         startGameText();
+        retry();
         preLaunch(discoverAll);
         preLaunch(coverGS);
     }
@@ -218,7 +219,7 @@ function gameMainQuestion() {
     let questionPhrase;
     switch (phraseRandom) {
         case 1:
-            questionPhrase = `Расчет числа... \n Проверка: \n ${answerNumber}?..\n\u{1F916}`;
+            questionPhrase = `Расчитываю число... \n Игрок загадал число: \n ${answerNumber}?..\n\u{1F916}`;
             break;
         case 2:
             questionPhrase = `Число, \n которое вы загадали \n ничто иное как: \n ${answerNumber}?\n\u{1F913}`;
