@@ -9,17 +9,30 @@ body {
     font-size: larger;
 }
 
+.card-header h1 {
+    font-weight: bolder;
+}
+
+.card-header h2 {
+    text-decoration: underline double black;
+}
+
 .card-body {
     background-color: black;
     color: cornsilk;
-
 }
  
-
-
 .game-card {
     height: 100vh;
     font-family: 'Open Sans', monospace;
+}
+
+.covert {
+    display: none;
+}
+
+#answerField {
+    color: gold;
 }
 
 #gameLimits {
@@ -28,4 +41,91 @@ body {
 
 div .card {
     border: 5px ridge indigo;
+}
+
+.btn-light, .btn-dark {
+    width: 250px;
+    margin: 2px auto;
+}
+
+.btn-light:hover, .btn-dark:hover {
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+
+.btn-light {
+    color: blue;
+}
+
+.btn-light:hover, .btn-light:focus {
+    color: dodgerblue;
+    text-decoration: underline;
+}
+
+.btn-dark {
+    color: gold;
+}
+
+.btn-dark:hover, .btn-dark:focus {
+    color: goldenrod;
+    text-decoration: underline;
+}
+
+#gameSettings {
+    background-color: black;
+}
+
+form ul {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    list-style-type: none;
+    padding: 15px 0 0;
+    margin: 0;
+}
+
+form li {
+    color: gold;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bolder;
+    margin: auto 5px;
+}
+
+input, button {
+    margin: 12px auto;
+    
+}
+
+.limitInput {
+    text-align: center;
+    font-size: 20px;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+.limitInput:hover, .limitInput:focus  {
+    transform: scale(1.5);
+    transition: 0.3s;
+}
+
+#gameSettingsText {
+    color: gold;
+    margin: 1rem 0;
+}
+
+#btnLaunch {
+    font-size: 20px;
+    font-weight: bolder;
+    text-transform: uppercase;
+    border-radius: 10px;
+    width: 250px;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+#btnLaunch:hover {
+    transform: scale(1.2);
+    transition: 0.3s;
 }
